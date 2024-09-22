@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>instadownload</title>
+  <style>
+    :root {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2a2a2a;
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --accent-color: #bb86fc;
+      --error-color: #cf6679;
+      --success-color: #03dac6;
+    }
+
+    .light {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f4f4f4;
+      --text-primary: #333333;
+      --text-secondary: #666666;
+      --accent-color: #6200ee;
+      --error-color: #b00020;
+      --success-color: #03dac5;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: var(--accent-color);
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--text-secondary);
+      border-radius: 4px;
+      font-size: 1rem;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.3);
+    }
+
+    textarea {
+      height: 20px; /* Reduced height */
+      resize: vertical;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      background-color: var(--accent-color);
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: #9965f4;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .output {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--text-secondary);
+      border-radius: 4px;
+    }
+
+    .output h3 {
+      color: var(--accent-color);
+      margin-top: 0;
+    }
+
+    .output-item {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--text-secondary);
+    }
+
+    .output-item:last-child {
+      border-bottom: none;
+    }
+
+    .url-button {
+      display: inline-block;
+      margin-top: 0.5rem;
+      background-color: var(--success-color);
+      color: var(--bg-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+
+    .url-button:hover {
+      background-color: #02b3a4;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+<div class="container">
+  <h2>nanga jism downloader</h2>
+
+  <div class="input-group">
+    <label for="instaLink">Paste Enstagram Link Here:</label>
+    <input type="text" id="instaLink" placeholder="https://www.instagram.com/reel/C9OwK32P7IH/">
+    <button onclick="generateLink()">Generate Link</button>
+  </div>
+
+  <div id="generatedLinkOutput" class="output" style="display: none;">
+    <h3>Generated Link:</h3>
+    <a id="generatedLink" href="#" target="_blank" class="url-button">Open Modified Link</a>
+  </div>
+
+  <div class="input-group">
+    <label for="heapData">Paste Random Data Here:</label>
+    <textarea id="heapData" placeholder='Paste random data containing "height", "type", and "url"...'></textarea>
+    <button onclick="filterData()">Filter Data</button>
+  </div>
+
+  <div class="output" id="filterOutput" style="display: none;">
+    <h3>Filtered Data by Heights:</h3>
+    <div id="filteredData"></div>
+  </div>
+</div>
+
+<script>
+function generateLink() {
+  var instaLink = document.getElementById('instaLink').value.trim();
+  if (!instaLink) {
+    alert('Please paste a valid Enstagram link.');
+    return;
+  }
+
+  var modifiedLink = instaLink + '?__a=1&__d=dis';
+  document.getElementById('generatedLink').href = modifiedLink;
+  document.getElementById('generatedLink').innerText = 'Open Modified Link';
+  document.getElementById('generatedLinkOutput').style.display = 'block';
+}
+
+function filterData() {
+  var heapData = document.getElementById('heapData').value.trim();
+
+  if (!heapData) {
+    alert('Please paste data to filter.');
+    return;
+  }
+
+  var regex = /"height":\s*(\d+).*?"type":\s*(\d+).*?"url":\s*"(https:\/\/[^"]+)"/g;
+  var matches;
+  var filteredResults = {};
+  
+  while ((matches = regex.exec(heapData)) !== null) {
+    var height = matches[1];
+    var type = matches[2];
+    var url = matches[3];
+
+    if (!filteredResults[height]) {
+      filteredResults[height] = [];
+    }
+
+    filteredResults[height].push({ type: type, url: url });
+  }
+
+  displayFilteredData(filteredResults);
+}
+
+function displayFilteredData(data) {
+  var outputDiv = document.getElementById('filteredData');
+  outputDiv.innerHTML = '';
+  document.getElementById('filterOutput').style.display = 'block';
+
+  for (var height in data) {
+    var heightGroup = document.createElement('div');
+    heightGroup.className = 'output-item';
+    heightGroup.innerHTML = `<strong>Height: ${height}</strong><br>`;
+
+    data[height].forEach(function(item) {
+      heightGroup.innerHTML += `Type: ${item.type}, <a href="${item.url}" target="_blank" class="url-button">Open Video</a><br>`;
+    });
+
+    outputDiv.appendChild(heightGroup);
+  }
+}
+
+function toggleTheme() {
+  document.documentElement.classList.toggle('light');
+}
+
+document.getElementById('generatedLink').addEventListener('click', function() {
+  document.getElementById('generatedLinkOutput').style.display = 'none';
+});
+</script>
+
+</body>
+</html>
